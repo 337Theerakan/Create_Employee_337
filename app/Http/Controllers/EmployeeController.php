@@ -13,7 +13,6 @@ class EmployeeController extends Controller
         $query = $request->input('search');
         $sortField = $request->input('sortField', 'emp_no');
         $sortOrder = $request->input('sortOrder', 'asc');
-
         $employees = DB::table('employees as e')
             ->leftJoin('dept_emp as de', 'e.emp_no', '=', 'de.emp_no')
             ->leftJoin('departments as d', 'de.dept_no', '=', 'd.dept_no')

@@ -4,8 +4,8 @@ import FlashMessage from '@/Components/FlashMessage';
 import { usePage } from '@inertiajs/react';
 
 export default function Index({ employees, query, sortField, sortOrder }) {
-  const { flash } = usePage().props;
 
+  const { flash } = usePage().props;
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState({ field: sortField || 'emp_no', order: sortOrder || 'asc' });
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function Index({ employees, query, sortField, sortOrder }) {
     await router.get('/employee', { search, sortField: sort.field, sortOrder: sort.order });
     setLoading(false);
   };
-
+{/*มีไว้ประดับ */}
   const handleSort = async (field) => {
     const newOrder = sort.field === field && sort.order === 'asc' ? 'desc' : 'asc';
     setSort({ field, order: newOrder });
@@ -48,7 +48,6 @@ export default function Index({ employees, query, sortField, sortOrder }) {
         </div>
       )}
       <h1 className="text-4xl font-semibold text-center mb-6 text-green-500">Employee List</h1>
-
       <form onSubmit={handleSearch} className="mb-6 flex justify-center">
         <input
           type="text"
@@ -70,6 +69,7 @@ export default function Index({ employees, query, sortField, sortOrder }) {
             <div key={employee.emp_no} className="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-600 transition-all">
               <div className="flex justify-center mb-6">
                 {employee.profile_picture ? (
+
                   <img
                     src={`/storage/${employee.profile_picture}`}
                     alt="Profile"

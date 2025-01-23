@@ -14,7 +14,7 @@ export default function Create({ departments }) {
         profile_picture: null,
     });
 
-    // Handle profile picture change
+    // Handle profile picture change event
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -32,6 +32,7 @@ export default function Create({ departments }) {
     };
 
     return (
+        // แก้ไขเพิ่มเติม ให้เรียกใช้ handleSubmit เมื่อมีการส่งฟอร์ม และเรียกใช้ handleImageChange เมื่อมีการเลือกไฟล์
         <form onSubmit={handleSubmit} className="space-y-12 bg-gray-900 p-8 rounded-lg shadow-lg">
             {/* Profile Section */}
             <div className="border-b border-gray-600 pb-12">
@@ -230,14 +231,17 @@ export default function Create({ departments }) {
 
             {/* Submit Button */}
             <div className="mt-6">
+                {/* แก้ไขเพิ่มเติม ให้ปุ่มบันทึกไม่สามารถคลิกได้เมื่อกำลังประมวลผล */}
                 <button
                     type="submit"
                     disabled={processing}
                     className="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-6 py-2 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:text-sm"
                 >
+
                     {processing ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
                 </button>
             </div>
         </form>
     );
 }
+// processing คือตัวแปรที่ใช้เพื่อตรวจสอบว่ากำลังประมวลผลหรือไม่
