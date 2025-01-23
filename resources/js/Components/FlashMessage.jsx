@@ -16,7 +16,7 @@ const FlashMessage = ({ flash }) => {
 
     // ถ้าไม่มีข้อความ Flash ให้คืนค่า null
     if (!flash.success && !flash.error) return null;
-
+// ถ้ามีข้อความ Flash ให้แสดงข้อความ Flash
     return (
         <div
             id="flash-message"

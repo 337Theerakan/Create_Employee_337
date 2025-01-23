@@ -27,9 +27,8 @@ return [
     | Supported drivers: "local", "ftp", "sftp", "s3"
     |
     */
-
+//
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
