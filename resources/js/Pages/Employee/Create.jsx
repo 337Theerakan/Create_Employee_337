@@ -1,9 +1,11 @@
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { useForm } from '@inertiajs/react';
 import React, { useState } from 'react';
+import FlashMessage from '@/Components/FlashMessage';
 
-export default function Create({ departments }) {
+export default function Create({ departments, flash }) {
     const [profileImagePreview, setProfileImagePreview] = useState(null); // State for profile picture preview
+    const [fileError, setFileError] = useState(null); // State for file size error
     const { data, setData, post, processing, errors } = useForm({
         first_name: '',
         last_name: '',
@@ -14,16 +16,19 @@ export default function Create({ departments }) {
         profile_picture: null,
     });
 
-    // Handle profile picture change event
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                setFileError('ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 2MB)');
+                return;
+            }
+            setFileError(null); // Reset the error message
             setProfileImagePreview(URL.createObjectURL(file)); // Preview the selected image
             setData('profile_picture', file); // Store the file
         }
     };
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('employee.store'), {
@@ -32,8 +37,10 @@ export default function Create({ departments }) {
     };
 
     return (
-        // แก้ไขเพิ่มเติม ให้เรียกใช้ handleSubmit เมื่อมีการส่งฟอร์ม และเรียกใช้ handleImageChange เมื่อมีการเลือกไฟล์
         <form onSubmit={handleSubmit} className="space-y-12 bg-gray-900 p-8 rounded-lg shadow-lg">
+            {/* Flash Messages */}
+            <FlashMessage flash={flash} /> {/* Pass the flash prop to the FlashMessage component */}
+
             {/* Profile Section */}
             <div className="border-b border-gray-600 pb-12">
                 <h2 className="text-2xl font-semibold text-green-500">โปรไฟล์</h2>
@@ -48,21 +55,18 @@ export default function Create({ departments }) {
                             รูปโปรไฟล์
                         </label>
                         <div className="mt-2 flex items-center gap-x-3">
-
                             {profileImagePreview ? (
                                 <img
-                                //profileImagePreview คือรูปภาพที่เราเลือกจาก file input
                                     src={profileImagePreview}
                                     alt="Profile"
                                     className="h-16 w-16 rounded-full object-cover"
                                 />
                             ) : (
-                                // แก้ไขเพิ่มเติม ให้แสดงรูปภาพโปรไฟล์ หากมีรูปภาพหรือแสดงรูปภาพ UserCircleIcon หากไม่มีรูปภาพ
                                 <UserCircleIcon aria-hidden="true" className="h-16 w-16 text-gray-500" />
                             )}
                             <button
                                 type="button"
-                                onClick={() => document.getElementById('file-upload').click()} // เปิด file input เมื่อคลิก
+                                onClick={() => document.getElementById('file-upload').click()}
                                 className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700"
                             >
                                 เปลี่ยน
@@ -70,7 +74,7 @@ export default function Create({ departments }) {
                         </div>
                     </div>
 
-                    {/* Cover Photo */}
+                    {/* File Upload Section */}
                     <div className="col-span-full">
                         <label htmlFor="cover-photo" className="block text-sm font-medium text-gray-300">
                             รูปหน้าปก
@@ -89,15 +93,15 @@ export default function Create({ departments }) {
                                             name="file-upload"
                                             type="file"
                                             accept="image/*"
-                                            // แก้ไขเพิ่มเติม ให้เรียกใช้ handleImageChange เมื่อมีการเลือกไฟล์
                                             onChange={handleImageChange}
                                             className="sr-only"
                                         />
                                     </label>
+                                    {fileError && <span className="text-red-500">{fileError}</span>}
                                     {errors.profile_picture && (
                                         <span className="text-red-500">{errors.profile_picture}</span>
                                     )}
-                                    <p className="text-xs text-gray-400">PNG, JPG สูงสุด 10MB (จริงๆเเค่2MB)</p>
+                                    <p className="text-xs text-gray-400">PNG, JPG สูงสุด 2MB</p>
                                 </div>
                             </div>
                         </div>
@@ -209,20 +213,20 @@ export default function Create({ departments }) {
                             แผนก
                         </label>
                         <div className="mt-2">
-                        <select
-                        id="dept_no"
-                         name="dept_no"
-                         value={data.dept_no}
-                         onChange={(e) => setData('dept_no', e.target.value)}
-                         className="block w-full rounded-md bg-gray-800 px-3 py-2 text-base text-white outline-none focus:ring-2 focus:ring-green-600 sm:text-sm"
-                         >
-                            <option value="" disabled>--- Select Department ---</option> {/* Placeholder option */}
-                            {departments.map((dept) => (
-                                <option key={dept.dept_no} value={dept.dept_no}>
-                                    {dept.dept_name}
+                            <select
+                                id="dept_no"
+                                name="dept_no"
+                                value={data.dept_no}
+                                onChange={(e) => setData('dept_no', e.target.value)}
+                                className="block w-full rounded-md bg-gray-800 px-3 py-2 text-base text-white outline-none focus:ring-2 focus:ring-green-600 sm:text-sm"
+                            >
+                                <option value="" disabled>--- Select Department ---</option>
+                                {departments.map((dept) => (
+                                    <option key={dept.dept_no} value={dept.dept_no}>
+                                        {dept.dept_name}
                                     </option>
                                 ))}
-                                </select>
+                            </select>
                         </div>
                         {errors.dept_no && <span className="text-red-500">{errors.dept_no}</span>}
                     </div>
@@ -231,17 +235,14 @@ export default function Create({ departments }) {
 
             {/* Submit Button */}
             <div className="mt-6">
-                {/* แก้ไขเพิ่มเติม ให้ปุ่มบันทึกไม่สามารถคลิกได้เมื่อกำลังประมวลผล */}
                 <button
                     type="submit"
                     disabled={processing}
                     className="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-6 py-2 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:text-sm"
                 >
-
                     {processing ? 'รอแปบงับ...' : 'บันทึกข้อมูล'}
                 </button>
             </div>
         </form>
     );
 }
-// processing คือตัวแปรที่ใช้เพื่อตรวจสอบว่ากำลังประมวลผลหรือไม่

@@ -2,21 +2,24 @@ import { useEffect } from 'react';
 
 const FlashMessage = ({ flash }) => {
     useEffect(() => {
-        // ตั้งเวลาให้ข้อความ Flash หายไปหลังจาก 3 วินาที
-        const timer = setTimeout(() => {
-            const flashElement = document.getElementById('flash-message');
-            if (flashElement) {
-                flashElement.style.display = 'none';
-            }
-        }, 3000); // 3 วินาที
+        if (flash.success || flash.error) {
+            // Set timeout to hide flash message after 3 seconds
+            const timer = setTimeout(() => {
+                const flashElement = document.getElementById('flash-message');
+                if (flashElement) {
+                    flashElement.style.display = 'none';
+                }
+            }, 3000); // 3 seconds
 
-        // ล้างเวลาเมื่อคอมโพเนนต์ถูกทำลาย
-        return () => clearTimeout(timer);
-    }, []);
+            // Cleanup timer when component unmounts or flash changes
+            return () => clearTimeout(timer);
+        }
+    }, [flash]); // Re-run the effect if flash changes
 
-    // ถ้าไม่มีข้อความ Flash ให้คืนค่า null
+    // If no flash messages, return null
     if (!flash.success && !flash.error) return null;
-// ถ้ามีข้อความ Flash ให้แสดงข้อความ Flash
+
+    // Render flash message if success or error exists
     return (
         <div
             id="flash-message"
@@ -28,4 +31,3 @@ const FlashMessage = ({ flash }) => {
 };
 
 export default FlashMessage;
-//คอมโพเนนต์นี้ใช้สำหรับแสดงข้อความ (Success/Error)
