@@ -107,8 +107,8 @@ export default function Create({ departments }) {
 
             {/* Personal Information */}
             <div className="border-b border-gray-600 pb-12">
-                <h2 className="text-2xl font-semibold text-green-500">ข้อมูลส่วนบุคคล</h2>
-                <p className="mt-1 text-sm text-gray-400">กรุณากรอกให้ครบจบ</p>
+                <h2 className="text-2xl font-semibold text-green-500">ข้อมูลพนักงาน</h2>
+                <p className="mt-1 text-sm text-gray-400">กรุณากรอกให้ครบ</p>
 
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     {/* First Name */}
@@ -238,7 +238,7 @@ export default function Create({ departments }) {
                     className="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-6 py-2 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:text-sm"
                 >
 
-                    {processing ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+                    {processing ? 'รอแปบงับ...' : 'บันทึกข้อมูล'}
                 </button>
             </div>
         </form>
